@@ -51,8 +51,7 @@ function Accumulator(startingValue) {
 
 let accumulator = new Accumulator(5);
 
-console.log(accumulator.value)
+console.log(accumulator.value);
 
 accumulator.read();
 accumulator.read();
-
