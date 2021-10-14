@@ -67,7 +67,6 @@ function truncate (str, maxlength) {
 
 console.log(truncate("Влад", 2))
 
-
 /*
 4.
 
@@ -79,7 +78,7 @@ console.log(truncate("Влад", 2))
 */
 
 function extractCurrencyValue(str) {
-    let number = str.slice(1)
+    let number = str.slice(1);
 
     return +number
 }
