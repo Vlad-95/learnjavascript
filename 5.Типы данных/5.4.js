@@ -71,20 +71,55 @@ P.S. Ноль 0 – считается числом, не останавлива
 */
 
 function sumInput() {
-    let value;
+    
     let arr = [];
+    let sum = 0;
 
-    do {
-        value = prompt("Введите число");
-        valueToNumber = Number(value);
+    while (true) {
+        let value = prompt("Введите число");
 
-        if (valueToNumber == NaN || value == null || value == "") {
+        if (value == "" || value == null || !isFinite(value)) {
             break;
-        }
-        arr.push(valueToNumber)
-    } while (value || value == "0")
+        } else {
+            arr.push(+value);
 
-    return arr;
+            sum += +value;            
+        }
+    }
+
+    return sum;
 }
 
-console.log(sumInput())
+//sumInput();
+//console.log(sumInput())
+
+/*
+5.
+
+Подмассив набольшей суммы
+
+На входе массив чисел, например: arr = [1, -2, 3, 4, -9, 6].
+Задача: найти непрерывный подмассив в arr, сумма элементов в котором максимальна.
+Функция getMaxSubSum(arr) должна возвращать эту сумму.
+*/
+
+let numbers = [1, -2, 3, 4, -9, 6]; //Сумма всех: 3. А на выходе должно быть 7
+//let numbers = [1, -2, 3]
+function getMaxSubSum(arr) {
+    let maxSum = 0;
+    let sum = 0;
+
+    for (let item of arr) {
+        sum += item;
+
+        maxSum = Math.max(maxSum, sum);
+
+        if (sum < 0) {
+            sum = 0
+        }
+    }
+
+    return maxSum;
+}
+
+console.log(getMaxSubSum(numbers))
