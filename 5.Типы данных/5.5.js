@@ -321,9 +321,36 @@ let masha11 = { name: "Маша", age: 29 };
 let arr11 = [ vasya11, petya11, masha11 ];
 
 function getAverageAge(users) {
-    let ages = users.map(item => item.age);
-
-    return ages
+    return users.reduce((prev, user) => prev + user.age, 0) / users.length
 }
 
-console.log(getAverageAge(arr11))
+console.log(getAverageAge(arr11));
+
+/*
+12.
+
+Оставить уникальные элементы массива
+
+
+Пусть arr – массив строк.
+
+Напишите функцию unique(arr), которая возвращает массив, содержащий только уникальные элементы arr.
+*/
+
+let strings = ["кришна", "кришна", "харе", "харе",
+  "харе", "харе", "кришна", "кришна", ":-O"
+];
+
+function unique(arr) {
+    let result = [];
+
+    for (let str of arr) {
+        if (!result.includes(str)) {
+            result.push(str)
+        }
+    }
+
+    return result
+}
+
+console.log(unique(strings));
