@@ -1,3 +1,94 @@
+//тема из видео
+let fac = function factorial(n) {
+    return (n != 1) ? factorial(n - 1) * n : n;
+}
+
+let fib = function fibonacchi(n) {
+    return (n > 2) ? fibonacchi(n - 1) + fibonacchi(n - 2) : 1;
+}
+
+function logResultDecorator (func, funcName) {
+    return function () {
+        let result = func.apply(this, arguments);
+        console.log(`Результат ${funcName} : ${result}`);
+    
+        return result;
+    }
+}
+
+function callCountDecorator (func, funcName) {
+    let count = 0;
+
+    return function () {
+        count++;
+        console.log(`Функция ${funcName} была вызвана ${count} раз`);
+
+        return func.apply(this, arguments)
+    }
+}
+
+function timeDecorator (func, funcName) {
+    return function () {
+        let startTime = Date.now();
+        let result = func.apply(this, arguments);
+        let time = Date.now() - startTime;
+
+        console.log(`Функция ${funcName} выполнялась ${time} мс`);
+
+        return result;
+    }
+}
+
+function cacheDecorator (func) {
+    let cache = {};
+
+    return function (n) {
+        if (typeof cache[n] === 'undefined') {
+            cache[n] = func.apply(this, arguments);
+        }
+
+        return cache[n];
+    }
+}
+
+function argumentsCountDecorator (func, requiredNumber) {
+    return function () {
+        let argsCount = arguments.length;
+
+        if (requiredNumber !== argsCount) {
+            console.log('Количество элементов не совпадает')
+            return;
+        } 
+
+        return func.apply(this, arguments);
+    }
+}
+
+fac = logResultDecorator(fac, 'factorial');
+
+fac = cacheDecorator(fac);
+
+fac = callCountDecorator(fac, 'facrotial');
+
+fac = timeDecorator(fac, 'facrotial');
+
+fac = argumentsCountDecorator(fac, 1);
+//=======
+fib = logResultDecorator(fib, 'fibonacchi');
+
+fib = cacheDecorator(fib);
+
+fib = callCountDecorator(fib, 'fibonacchi');
+
+fib = timeDecorator(fib, 'fibonacchi');
+
+fib = argumentsCountDecorator(fib, 1);
+
+
+
+fac(6);
+fib(10);
+fib(10);
 /*
 1. Декоратор-шпион
 важность: 5
@@ -71,9 +162,9 @@ function f(x) {
     console.log(x);
 }
 
-function delay(f, time) {
+function delay(func, time) {
     return function() {
-        setTimeout(() => f.apply(this, arguments), time)
+        setTimeout(() => func.apply(this, arguments), time)
     }
 }
 
@@ -121,3 +212,53 @@ y = debounce(y);
 
 y(1);
 y(1);
+
+
+/*
+4. Тормозящий (throttling) декоратор
+важность: 5
+Создайте «тормозящий» декоратор throttle(f, ms), который возвращает обёртку, передавая вызов в f не более одного раза в ms миллисекунд. Те вызовы, которые попадают в период «торможения», игнорируются.
+
+Отличие от debounce – если проигнорированный вызов является последним во время «задержки», то он выполняется в конце.
+
+Давайте рассмотрим реальное применение, чтобы лучше понять это требование и выяснить, откуда оно взято.
+
+Например, мы хотим отслеживать движения мыши.
+
+В браузере мы можем объявить функцию, которая будет запускаться при каждом движении указателя и получать его местоположение. Во время активного использования мыши эта функция запускается очень часто, это может происходить около 100 раз в секунду (каждые 10 мс).
+
+Мы бы хотели обновлять информацию на странице при передвижениях.
+
+…Но функция обновления update() слишком ресурсоёмкая, чтобы делать это при каждом микродвижении. Да и нет смысла делать обновление чаще, чем один раз в 1000 мс.
+
+Поэтому мы обернём вызов в декоратор: будем использовать throttle(update, 1000) как функцию, которая будет запускаться при каждом перемещении указателя вместо оригинальной update(). Декоратор будет вызываться часто, но передавать вызов в update() максимум раз в 1000 мс.
+
+Визуально это будет выглядеть вот так:
+
+Для первого движения указателя декорированный вариант сразу передаёт вызов в update. Это важно, т.к. пользователь сразу видит нашу реакцию на его перемещение.
+Затем, когда указатель продолжает движение, в течение 1000 мс ничего не происходит. Декорированный вариант игнорирует вызовы.
+По истечению 1000 мс происходит ещё один вызов update с последними координатами.
+Затем, наконец, указатель где-то останавливается. Декорированный вариант ждёт, пока не истечёт 1000 мс, и затем вызывает update с последними координатами. В итоге окончательные координаты указателя тоже обработаны.
+Пример кода:
+
+function f(a) {
+  console.log(a)
+}
+
+// f1000 передаёт вызовы f максимум раз в 1000 мс
+let f1000 = throttle(f, 1000);
+
+f1000(1); // показывает 1
+f1000(2); // (ограничение, 1000 мс ещё нет)
+f1000(3); // (ограничение, 1000 мс ещё нет)
+
+// когда 1000 мс истекли ...
+// ...выводим 3, промежуточное значение 2 было проигнорировано
+P.S. Аргументы и контекст this, переданные в f1000, должны быть переданы в оригинальную f
+*/
+
+function throlling(a) {
+    console.log(a)
+}
+
+let f1000 = throttle(throlling, 1000);
