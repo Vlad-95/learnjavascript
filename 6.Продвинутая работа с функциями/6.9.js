@@ -261,4 +261,8 @@ function throlling(a) {
     console.log(a)
 }
 
+fun
+
 let f1000 = throttle(throlling, 1000);
+f1000(2); // (ограничение, 1000 мс ещё нет)
+f1000(3); // (ограничение, 1000 мс ещё нет)
