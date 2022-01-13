@@ -166,7 +166,7 @@ let hamster = {
         this.stomach.push(food);
     }
 };
-  
+
 let speedy = {
     __proto__: hamster,
     stomach: []
